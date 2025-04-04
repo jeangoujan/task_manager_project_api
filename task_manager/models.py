@@ -19,7 +19,7 @@ class Task(models.Model):
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.NEW)
     priority = models.IntegerField(choices=Priority.choices, default=Priority.LOW)
     due_date = models.DateField(blank=True, null=True)
-    project = models.ForeignKey('Project', on_delete=models.CASCADE, related_name='tasks', default=1)    
+    project = models.ForeignKey('Project', on_delete=models.CASCADE, related_name='tasks')    
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='tasks', blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
