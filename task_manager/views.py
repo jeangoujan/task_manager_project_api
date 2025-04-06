@@ -1,8 +1,10 @@
 from rest_framework import generics
 from .models import Task, Project
-from .serializers import TaskSerializer, ProjectSerializer
+from .serializers import TaskSerializer, ProjectSerializer, RegistrationSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from django.contrib.auth import get_user_model
+from rest_framework.permissions import AllowAny
 
 # Create your views here.
 class TaskCreateView(generics.CreateAPIView):
@@ -62,4 +64,10 @@ class ProjectTaskListView(generics.ListAPIView):
     def get_queryset(self):
         project_id = self.kwargs['project_id']
         return Task.objects.filter(project__id=project_id)
-    
+
+
+User = get_user_model()
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = RegistrationSerializer
+    permission_classes = [AllowAny]
