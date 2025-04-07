@@ -16,23 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
 from rest_framework import permissions
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
-schema_view = get_schema_view(
-   openapi.Info(
-      title="Task Manager API",
-      default_version='v1',
-      description="Документация API для управления задачами и проектами",
-      contact=openapi.Contact(email="your@email.com"),
-   ),
-   public=True,
-   permission_classes=[permissions.AllowAny],
-)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('task_manager.urls')),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),  
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'), 
 ]
