@@ -1,23 +1,24 @@
-FROM python:3.12 AS requirements-stage
+# Используем официальный образ Python
+FROM python:3.12-slim
 
-WORKDIR /tmp
-RUN curl -sSL https://install.python-poetry.org | python3 - --version 2.0.1 && \
-    export PATH="/root/.local/bin:$PATH"
+# Устанавливаем зависимости для Poetry
+RUN pip install --upgrade pip && \
+    pip install poetry
 
-RUN /root/.local/bin/poetry self add poetry-plugin-export
+# Устанавливаем рабочую директорию внутри контейнера
+WORKDIR /app
 
-COPY ./pyproject.toml ./poetry.lock /tmp/
+# Копируем pyproject.toml и poetry.lock для установки зависимостей
+COPY pyproject.toml poetry.lock /app/
 
-RUN ls -la /tmp
-RUN /root/.local/bin/poetry export --without-hashes -f requirements.txt --output requirements.txt
-FROM python:3.12
+# Устанавливаем зависимости через Poetry
+RUN poetry install --no-root
 
+# Копируем весь проект в контейнер
+COPY . /app/
 
-WORKDIR /code
-COPY --from=requirements-stage /tmp/requirements.txt .
+# Открываем порт 8000 для Django
+EXPOSE 8000
 
-RUN pip install --no-cache-dir --upgrade -r ./requirements.txt
-
-COPY . .
-
-CMD ["sh", "./scripts/launch.sh"]
+# Команда для запуска сервера
+CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
