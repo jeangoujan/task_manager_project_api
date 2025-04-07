@@ -5,8 +5,8 @@ from django.contrib.auth import get_user_model
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ['owner']
-
+        fields = '__all__'
+        read_only_fields = ['owner']
 
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:

@@ -8,6 +8,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
+from rest_framework.exceptions import PermissionDenied
 
 # Create your views here.
 class TaskCreateView(generics.CreateAPIView):
@@ -49,7 +50,10 @@ class ProjectListView(generics.ListCreateAPIView):
     permission_classes = [AllowAny]
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        if self.request.user.is_authenticated:
+            serializer.save(owner=self.request.user)
+        else:
+            raise PermissionDenied("You must be logged in to create a project")
 
 class ProjectRetrieveView(generics.RetrieveAPIView):
     queryset = Project.objects.all()
