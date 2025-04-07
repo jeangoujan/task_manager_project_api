@@ -39,8 +39,8 @@ class TaskListView(generics.ListAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_field = ['project', 'status', 'priority']
-    search_field = ['title', 'description']
+    filterset_fields = ['project', 'status', 'priority']
+    search_fields = ['title', 'description']
     permission_classes = [AllowAny]
 
 
