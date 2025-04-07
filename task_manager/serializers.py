@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = '__all__'
+        fields = ['owner']
 
 
 class TaskSerializer(serializers.ModelSerializer):
