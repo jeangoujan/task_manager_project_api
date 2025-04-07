@@ -48,6 +48,9 @@ class ProjectListView(generics.ListCreateAPIView):
     serializer_class = ProjectSerializer
     permission_classes = [AllowAny]
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 class ProjectRetrieveView(generics.RetrieveAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
